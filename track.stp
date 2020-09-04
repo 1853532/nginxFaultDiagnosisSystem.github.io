@@ -1,0 +1,13 @@
+#! /usr/bin/env stap
+
+probe syscall_any.return{
+    if(pid()==target()){
+        errno = retval
+        if(errno < 0){
+            if(name != "futex"){
+                printf("%d,%s,%d,%s\n",gettimeofday_ms(),name,errno,errno_str(errno))
+            }
+        }
+     }    
+}
+
